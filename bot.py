@@ -20,10 +20,13 @@ def check_user_needs():
 
 def response_code_valid(service=None):
     data = str(service.lower()).split(" ")
+    print data
     if len(data) > 1:
         for i in range(0,len(data)):
+            print data[i] in ['issue', 'issues', 'problem', 'problems', 'help', 'fix']
             if data[i] in ['issue', 'issues', 'problem', 'problems', 'help', 'fix']:
                 response = check_user_needs()
+                break
             elif i == len(data)-1:
                 response = selected_service(service)
     elif service in ['1', '2', '3'] or service.lower().startswith("ref"):
