@@ -18,6 +18,21 @@ def check_user_needs():
     return menu
 
 
+def response_code_valid(service=None):
+    data = str(service.lower()).split(" ")
+    if len(data) > 1:
+        for i in range(0,len(data)):
+            if data[i] in ['issue', 'issues', 'problem', 'problems', 'help', 'fix']:
+                response = check_user_needs()
+            elif i == len(data)-1:
+                response = selected_service(service)
+    elif service in ['1', '2', '3'] or service.lower().startswith("ref"):
+        response = selected_service(service)
+    else:
+        response = 'Could n\'t understand you. Please request with texts e.g help me, i need fix or etc..'
+    return response
+
+
 def selected_service(service=None):
     bool = service.startswith("REF")
     print bool
@@ -28,12 +43,6 @@ def selected_service(service=None):
         response = status(service)
     elif service == '3':
         response = callback()
-    elif len(service.split(" ")) >= 1:
-        for i in range(0,len(service.split(" "))):
-            if str(service.split(" ")[i]).lower() in ['issue','issues','problem','problems','help','fix']:
-                response = check_user_needs(service)
-            else:
-                response = "Sorry please say ask me a valid question."
     else:
         response = 'Incorrect Response Code. Please try again'
 
@@ -57,23 +66,6 @@ def callback():
     return "Your number is registered and you will receive a callback as soon as possible"
 
 
-def analyse_text(question=None):
-    q_intents = ['what', 'what\'s', 'why','who','who\'re' 'how', 'how\'s', 'whom', 'where', 'which', 'whose', 'when']
-    q_obj_intents = ['name', 'age', 'created']
-    answers = ['I am :-) Bot.','2 months ;-)','Mr. Soumya ;-)']
-    tokens = question.split(" ")
-    if tokens[0].lower() in q_obj_intents:
-        if "?" in tokens or tokens.lower() in q_intents:
-            indx = q_obj_intents.index(tokens[0].lower())
-            print indx
-            print answers[indx]
-            return answers[indx]
-    else:
-        return '''I am not sure what you are asking for, I am currently in development, 
-        Please ask the questions which I can answer.
-         Like [hi,hello,how are you ?,what is your age ?,what is your name ?,bye]'''
-
-
 def send_msg():
     try:
 
@@ -82,7 +74,7 @@ def send_msg():
             msg = driver.find_element_by_xpath("(//span[@class='selectable-text invisible-space copyable-text'])[position()={}]".format(i+1))
             # print (msg.text)
         time.sleep(5)
-        response = selected_service(str(msg.text))
+        response = response_code_valid(str(msg.text))
         id = driver.find_element_by_css_selector("._2S1VP.copyable-text.selectable-text")
         id.clear()
         id.send_keys(response)
@@ -93,7 +85,6 @@ def send_msg():
         clic.click()
 
     except Exception as e:
-        # print ("Exception-2")
         sender()
 
 
