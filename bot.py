@@ -37,7 +37,7 @@ def response_code_valid(service=None):
 
 
 def selected_service(service=None):
-    bool = service.startswith("REF")
+    bool = service.lower().startswith("ref")
     print bool
     if service == '1':
         num = randint(999,9999)
