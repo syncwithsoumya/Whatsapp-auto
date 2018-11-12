@@ -1,8 +1,9 @@
-'''
+"""
 
 Customer Related functions
 
-'''
+"""
+
 from random import randint
 from utilities import mappings
 

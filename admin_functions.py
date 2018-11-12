@@ -1,7 +1,7 @@
-'''
-
+"""
 Admin process controller
-'''
+
+"""
 
 
 def admin_menu():

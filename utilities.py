@@ -1,7 +1,8 @@
-'''
+"""
 
 Necessary functions and variables
-'''
+
+"""
 
 
 def get_all_msgs(driver=None):
