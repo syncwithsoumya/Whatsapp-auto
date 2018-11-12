@@ -1,0 +1,7 @@
+Sales Agent:
+1. Triggers msgs every day to new users.
+2. Follows up with customers every week.
+
+Executive Agent:
+1. Handles user queries.
+2. Invokes sales Agent.
