@@ -5,7 +5,6 @@ from customer_functions import *
 from utilities import *
 from admin_functions import *
 import time
-import sys
 
 
 def send_admin_msg():
@@ -59,7 +58,7 @@ def sender():
 
 
 if __name__ == '__main__':
-    sys.setrecursionlimit(5000)
+    load_stack()
     driver = webdriver.Chrome("application_driver.exe")
     driver.maximize_window()
     driver.get("https://web.whatsapp.com/")

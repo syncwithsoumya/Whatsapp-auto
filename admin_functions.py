@@ -2,6 +2,8 @@
 Admin process controller
 
 """
+from database_setup import *
+from database_connection import *
 
 
 def admin_menu():
@@ -27,8 +29,8 @@ def admin_response_code_valid(service=None):
                 break
             elif i == len(data) - 1:
                 response = admin_selected_service(service)
-    elif service in ['1', '2', '3', '4', '5'] or service.lower().startswith("ref") or service.lower().startswith("Add-")\
-            or service.lower().startswith("Del-") or service.lower().startswith("Mod-"):
+    elif service in ['1', '2', '3', '4', '5'] or service.lower().startswith("ref") or service.lower().startswith("add-")\
+            or service.lower().startswith("del-") or service.lower().startswith("mod-"):
         response = admin_selected_service(service)
     else:
         response = 'Please type "Menu"(without quotes)'
@@ -43,11 +45,11 @@ def admin_selected_service(service=None):
     if service == '1' or ref_no:
         response = troubleshooting_status(service)
     elif service == '2' or add_flag:
-        response = add_customer(service)
+        response = add_customer(service,connect=db_connection())
     elif service == '3' or del_flag:
-        response = del_customer(service)
+        response = del_customer(service,connect=db_connection())
     elif service == '4' or mod_flag:
-        response = mod_customer(service)
+        response = mod_customer(service,connect=db_connection())
     elif service == '5':
         response = escalate()
     else:
@@ -62,25 +64,52 @@ def troubleshooting_status(ref=None):
         return "Your reference number is under process."
 
 
-def add_customer(text=None):
+def add_customer(text=None,connect=None):
     if text == '2':
-        return "Please type \"Add-\",\"Number\",\"Username\",\"Purpose\",\"Existing\""
+        return "Please type \"Add-\"Number\",\"Username\",\"Existing\" E.g. Add-1234567890,xyz,n"
     else:
-        return "Added Successfully"
+        data= str(text.split("-")[1]).split(",")
+        print "data->{}" .format(data)
+        name= str(data[1]).replace(" ", "")
+        no= str(data[0]).replace(" ", "")
+        exist = str(data[2]).replace(" ", "")
+        print "--{},{},{}".format(name,no,exist)
+        status = add_db_customer(connect=connect, name=name,phone=no,existing=exist)
+        if status == 200:
+            return "Added Successfully"
+        else:
+            return "There is some issues. Try again !"
 
 
-def del_customer(text=None):
-    if text == '2':
-        return "Please type \"Del-\",\"Number\",\"Username\",\"Purpose\",\"Existing\""
+def del_customer(text=None, connect=None):
+    if text == '3':
+        return "Please type \"Del-\"Username\" E.g. Del-xyz"
     else:
-        return "Deleted Successfully"
+        data = text.split("-")
+        print data
+        name = str(data[1]).replace(" ", "")
+        print "name-{}".format(name)
+        status = del_db_customer(connect=connect,name=name)
+        if status == 200:
+            return "Deleted Successfully"
+        else:
+            return "There is some issues. Try again !"
 
 
-def mod_customer(text=None):
-    if text == '2':
-        return "Please type \"Mod-\",\"Number\",\"Username\",\"Purpose\",\"Existing\""
+def mod_customer(text=None, connect=None):
+    if text == '4':
+        return "Please type \"Mod-\"Number\",\"Username\",\"Existing\" E.g. Mod-1234567890,xyz,n"
     else:
-        return "Modified Successfully"
+        data = str(text.split("-")[1]).split(",")
+        print data
+        name = str(data[1]).replace(" ", "")
+        no = str(data[0]).replace(" ", "")
+        exist = str(data[2]).replace(" ", "")
+        status = mod_db_customer(connect=connect,name=name, phone=no, existing=exist)
+        if status == 200:
+            return "Modified Successfully"
+        else:
+            return "There is some issues. Try again !"
 
 
 def escalate():
